@@ -1,0 +1,64 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+*.venv
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# TorchGeo dataset caches and downloads
+data/
+datasets/
+torchgeo_cache/
+*.h5
+*.npz
+
+# Logs and debugging files
+logs/
+*.log
+debug.log
+
+# Model weights and checkpoints
+checkpoints/
+models/
+*.pth
+*.pt
+*.ckpt
+
+# Output images and results
+outputs/
+figures/
+*.png
+*.jpg
+*.jpeg
+*.tiff
+*.svg
+
+# Environment & dependency files
+pip-log.txt
+pip-delete-this-directory.txt
+*.env
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# VS Code & JetBrains IDE settings
+.vscode/
+.idea/
+
+# Docker files (if applicable)
+*.dockerignore
+
+# Large files (optional: use Git LFS for large binary files)
+*.tif
+*.tiff
+*.hdf5
+*.h5
+*.npy
+*.csv
