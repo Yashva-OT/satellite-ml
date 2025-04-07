@@ -29,7 +29,7 @@ def toCRS(bbox, crs):
 
 if __name__ == "__main__":
 
-    with open("./configs/inference.json", 'r') as f:
+    with open("./configs/patchload.json", 'r') as f:
         infer_conf = json.load(f)
 
     data_dir = infer_conf["data_dir"]
@@ -37,6 +37,7 @@ if __name__ == "__main__":
     bbox = infer_conf["bbox"]
     crs = infer_conf["crs"]
     ndvi = infer_conf["ndvi"]
+    figname = infer_conf["figname"]
 
     # Initialize your Sentinel dataset
     dataset = Sentinel2(paths=data_dir, bands = bands)
@@ -71,4 +72,4 @@ if __name__ == "__main__":
         plt.colorbar(label='NDVI')
         plt.title('Greenery Map (NDVI)')
         plt.axis('off')  # Turn off axis labels
-        plt.show()
+        plt.savefig(figname)

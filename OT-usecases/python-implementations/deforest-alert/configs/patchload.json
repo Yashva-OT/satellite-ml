@@ -1,0 +1,8 @@
+{
+    "data_dir":"data/gachiboli-1803",
+    "bands":["B02","B03","B04","B08"],
+    "bbox":[78.3199, 17.4147, 78.3689, 17.4597],
+    "crs":32643,
+    "ndvi":true,
+    "figname":"gachiboli-18march"
+}
