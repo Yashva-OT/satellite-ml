@@ -3,6 +3,7 @@ from torchgeo.datasets.utils import BoundingBox
 import pyproj
 import matplotlib.pyplot as plt
 import json
+import os
 
 def toCRS(bbox, crs):
     # implementation tested for "EPSG:32642" and "EPSG:32643"
@@ -24,7 +25,14 @@ def toCRS(bbox, crs):
 
     return x_min, y_min, x_max, y_max
 
+def plot_indice(indice_normalized, indice_name, plot_dir):
 
+    plt.figure(figsize=(10, 6))
+    plt.imshow(indice_normalized.cpu().numpy(), cmap='RdYlGn')  # Use RdYlGn colormap for greenery
+    plt.colorbar(label=f'{indice_name.upper()}')
+    plt.title(f'Greenery Map ({indice_name.upper()})')
+    plt.axis('off')  # Turn off axis labels
+    plt.savefig(f"{plot_dir}/{indice_name}")
 
 
 if __name__ == "__main__":
@@ -36,8 +44,17 @@ if __name__ == "__main__":
     bands = infer_conf["bands"]
     bbox = infer_conf["bbox"]
     crs = infer_conf["crs"]
-    ndvi = infer_conf["ndvi"]
-    figname = infer_conf["figname"]
+    indices = infer_conf["indices"]
+    rgb = infer_conf["rgb"]
+
+    #if data_dir contains band with multiple res, transform them to a common res (currently-10m)
+    multi_res = infer_conf["multi_res"] 
+
+    if multi_res:
+        from change_resolution import change_res
+        # currently hardcoded to ->10m
+        change_res(data_dir, 10)
+
 
     # Initialize your Sentinel dataset
     dataset = Sentinel2(paths=data_dir, bands = bands)
@@ -50,26 +67,27 @@ if __name__ == "__main__":
     # Create a BoundingBox using projected coordinates
     roi = BoundingBox(minx=x_min, maxx=x_max, miny=y_min, maxy=y_max, mint=mint, maxt=maxt)
 
-    # For sanity
-    print(roi.minx >= dataset.bounds.minx)
-    print(roi.maxx <= dataset.bounds.maxx)
-    print(roi.miny >= dataset.bounds.miny)
-    print(roi.maxy <= dataset.bounds.maxy)
-
-
     # Filter the dataset using the bounding box
     sample = dataset[roi]
+    image = sample['image']
 
-    if ndvi:
-        ndvi = sample['image'][3,:,:]  # NDVI band
+    if rgb or len(indices):
+        # create plot dir
+        data_dir_name = data_dir.split('/')[-1]
+        plot_dir = f"plots/{data_dir_name}"
+        os.makedirs(plot_dir, exist_ok=True)
+        
+    if rgb:
 
-        # Normalize NDVI values for visualization
-        ndvi_normalized = (ndvi - ndvi.min()) / (ndvi.max() - ndvi.min())
+        dataset.plot(sample)
+        plt.savefig(f"{plot_dir}/rgb")
 
-        # Plotting the NDVI map
-        plt.figure(figsize=(10, 6))
-        plt.imshow(ndvi_normalized.cpu().numpy(), cmap='RdYlGn')  # Use RdYlGn colormap for greenery
-        plt.colorbar(label='NDVI')
-        plt.title('Greenery Map (NDVI)')
-        plt.axis('off')  # Turn off axis labels
-        plt.savefig(figname)
+    if len(indices):
+        from indices import INDICE_MAP
+        for indice, indice_args in indices.items():
+            transform = INDICE_MAP[indice](*indice_args)
+            image_modified = transform(image)
+            indice_tensor = image_modified[0,-1,:,:]  # indice
+            indice_normalized = (indice_tensor - indice_tensor.min()) / (indice_tensor.max() - indice_tensor.min())
+
+            plot_indice(indice_normalized, indice, plot_dir)
