@@ -1,8 +1,9 @@
 {
-    "data_dir":"data/gachiboli-1803",
-    "bands":["B02","B03","B04","B08"],
-    "bbox":[78.3199, 17.4147, 78.3689, 17.4597],
+    "data_dir":"data/gachiboli-april-early",
+    "bands":["B02","B03","B04","B05","B08"],
+    "bbox":[78.31172830683384, 17.441787633255014, 78.34618932825718, 17.455502748150515],
     "crs":32643,
-    "ndvi":true,
-    "figname":"gachiboli-18march"
+    "indices":{"ndvi":[4,2], "ndre":[4,3], "gndvi":[4,1]},
+    "rgb":true,
+    "multi_res":true
 }

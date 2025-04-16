@@ -1,8 +1,8 @@
 {
-    "data_dir1":"data/gachiboli-1803",
-    "data_dir2":"data/gachiboli-2803",
+    "data_dir1":"data/gachiboli-2803",
+    "data_dir2":"data/gachiboli-april",
     "bands":["B02","B03","B04","B08"],
-    "bbox":[78.3199, 17.4147, 78.3689, 17.4597],
+    "bbox":[78.3444, 17.4147, 78.3689, 17.4372],
     "crs":32643,
     "threshold":0.5
 }
